@@ -1,0 +1,64 @@
+
+<%- include ("./header") -%>
+
+<script>
+    function displayOnlyDisciplineMarks(){
+        var getAllMarksFromTable = document.getElementsByClassName("marks");
+        var getChosenDisciplineFromSelect = document.getElementById("Mark_Id_Discipline").value;
+        var marksTable = Array.from(getAllMarksFromTable);
+        marksTable.forEach(element => {
+            //element == tr
+            if(element.id != "Mark_Table_Top"){
+                if(getChosenDisciplineFromSelect != "removeNone" && element.id != getChosenDisciplineFromSelect){
+                    element.style.display = "none";
+                }
+                else {
+                    element.style.display = "table-row";
+                }
+            }
+        });
+    }
+</script>
+ 
+
+<h1>Marks</h1>
+
+<% 
+// put unique disciplines (data.Dis_Name) in a table, then to iterate through it in order to display them only once in html select
+var lstDiscipline = [];
+marksData.forEach(data => {
+    if(!lstDiscipline.includes(data.Dis_Name)){
+        lstDiscipline.push(data.Dis_Name);
+    }
+});
+%>
+
+<label for="Mark_Id_Discipline">discipline ?</label>
+<select name="Mark_Id_Discipline" id="Mark_Id_Discipline" onchange="displayOnlyDisciplineMarks()">
+    <option value="removeNone">All</option>
+    <% if(lstDiscipline.length!=0){ var i=1; lstDiscipline.forEach( dis => { %>
+        <option value=<%= dis %>><%= dis %></option>
+    <% i++; }) %>
+    <% } else{ %>
+        <option value="undefined">No Data Found</option>
+    <% } %>
+</select>
+
+
+<table id="Marks_Table">
+    <tr id="Marks_Table_Top">
+        <th>mark</th>
+        <th>discipline</th>
+    </tr>
+    <% if(marksData.length!=0){ var i=1; marksData.forEach(function(data){ %>
+        <tr class="marks" id=<%= data.Dis_Name%>>
+            <td><%= data.Mark_Value %></td>
+            <td><%= data.Dis_Name %></td>
+        </tr>
+    <% i++; }) %>
+    <% } else{ %>
+        <tr>
+            <td colspan="7">No Data Found</td>
+        </tr>
+    <% } %>
+</table>
